@@ -9,7 +9,7 @@ Start by pulling the appropriate Docker image for MySQL. You can download a spec
 
 `docker pull mysql/mysql-server:latest`
 
-[Docker Mysql Download](./images/docker-mysql-download.PNG)
+[Docker Mysql Download](./images/docker-mysql-download.png)
 
 If you are interested in a particular version of MySQL, replace latest with the version number. Visit Docker Hub to check other tags here
 
@@ -17,13 +17,13 @@ List the images to check that you have downloaded them successfully:
 
 `docker image ls`
 
-[Docker Image Output](./images/docker-image-output.PNG)
+[Docker Image Output](./images/docker-image-output.png)
 
 - To create a container:
 
 `docker run --name=P20 -it ubuntu bash`
 
-[Docker Create Container](./images/docker-cont-create.PNG)
+[Docker Create Container](./images/docker-cont-create.png)
 
 - To delete a container:
 
@@ -39,13 +39,13 @@ Step 2: Deploy the MySQL Container to your Docker Engine
 - Replace <my-secret-pw> with your chosen password
 - In the command above, we used the latest version tag. This tag may differ according to the image you downloaded
 
-[Docker Container MySql](./images/docker-contmysql-create.PNG)
+[Docker Container MySql](./images/docker-contmysql-create.png)
 
 2. Then, check to see if the MySQL container is running: Assuming the container name specified is mysql-server
 
 `docker ps -a`
 
-[Docker PS A](./images/docker-ps-a-output.PNG)
+[Docker PS A](./images/docker-ps-a-output.png)
 
 You should see the newly created container listed in the output. It includes container details, one being the status of this virtual environment. The status changes from health: starting to healthy, once the setup is complete.
 
@@ -81,31 +81,31 @@ At this stage you are now able to create a docker container but we will need to 
 
 `sudo docker ps -a`
 
-[Docker PS A](./images/docker-ps-a-output2.PNG)
+[Docker PS A](./images/docker-ps-a-output2.png)
 
 -To stop the container:
 
 `sudo docker stop p20`
 
-[Docker Stop p20](./images/docker-stop-p20.PNG)
+[Docker Stop p20](./images/docker-stop-p20.png)
 
 To remove the container:
 
 `sudo docker rm -f p20`
 
-[Docker Remove p20](./images/docker-remove-p20.PNG)
+[Docker Remove p20](./images/docker-remove-p20.png)
 
 - verify that the container is deleted:
 
 `sudo docker ps -a`
 
-[Docker Remove p20 Confirm](./images/docker-remove-confirm.PNG)
+[Docker Remove p20 Confirm](./images/docker-remove-confirm.png)
 
 First, create a network:
 
 `sudo docker network create --subnet=172.18.0.0/24 tooling_app_network`
 
-[Docker Network Create](./images/docker-create-network.PNG)
+[Docker Network Create](./images/docker-create-network.png)
 
 Creating a custom network is not necessary because even if we do not create a network, Docker will use the default network for all the containers you run. By default, the network we created above is of DRIVER Bridge. So, also, it is the default network. You can verify this by running the docker network ls command.
 
@@ -123,13 +123,13 @@ verify the environment variable is created:
 
 `echo $MYSQL_PW`
 
-[MySql PW Output](./images/mysql-pw.PNG)
+[MySql PW Output](./images/mysql-pw.png)
 
 Then, pull the image and run the container, all in one command like below:
 
 `sudo docker run --network tooling_app_network -h mysqlserverhost --name=mysql-server -e MYSQL_ROOT_PASSWORD=$MYSQL_PW  -d mysql/mysql-server:latest`
 
-[MySql Network link](./images/mysql-network.PNG)
+[MySql Network link](./images/mysql-network.png)
 
 Flags used
 
@@ -143,7 +143,7 @@ Verify the container is running:
 
 `sudo docker ps -a`
 
-[Docker Container run](./images/cont-run-confirm.PNG)
+[Docker Container run](./images/cont-run-confirm.png)
 
 As you already know, it is best practice not to connect to the MySQL server remotely using the root user. Therefore, we will create an SQL script that will create a user we can use to connect remotely.
 
@@ -163,14 +163,14 @@ Create a file and name it create_user.sql and add the below code in the file:
 
 `CREATE USER 'ludo'@'%' IDENTIFIED BY 'deshaun123'; GRANT ALL PRIVILEGES ON * . * TO 'ludo'@'%';`
 
-[Create file create_user.sql](./images/file-output.PNG)
+[Create file create_user.sql](./images/file-output.png)
 
 Run the script:
 Ensure you are in the directory create_user.sql file is located or declare a path:
 
 `sudo docker exec -i mysql-server mysql -uroot -p$MYSQL_PW < create_user.sql`
 
-[Create file create_user.sql](./images/user-sql-output.PNG)
+[Create file create_user.sql](./images/user-sql-output.png)
 
 Connecting to the MySQL server from a second container running the MySQL client utility
 The good thing about this approach is that you do not have to install any client tool on your laptop, and you do not need to connect directly to the container running the MySQL server.
@@ -179,7 +179,7 @@ Run the MySQL Client Container:
 
 `sudo docker run --network tooling_app_network --name mysql-client -it --rm mysql mysql -h mysqlserverhost -uludo  -p$MYSQL_PW`
 
-[Connect Mysql Tooling](./images/tooling-mysql.PNG)
+[Connect Mysql Tooling](./images/tooling-mysql.png)
 
 Flags used
 
@@ -205,27 +205,27 @@ Verify that the path is exported
 
 `echo $tooling_db_schema`
 
-[Echo Tooling Schema](./images/echo-tool-schema.PNG)
+[Echo Tooling Schema](./images/echo-tool-schema.png)
 
 Use the SQL script to create the database and prepare the schema. 
 
-[Echo Tooling Schema](./images/sql-to-schema.PNG)
+[Echo Tooling Schema](./images/sql-to-schema.png)
 
 Run the command:
 
 `cat $tooling_db_schema`
 
 
-[Echo Tooling Schema](./images/cat-dbstart.PNG)
+[Echo Tooling Schema](./images/cat-dbstart.png)
 
-[Echo Tooling Schema](./images/cat-db2.PNG)
+[Echo Tooling Schema](./images/cat-db2.png)
 
 
 With the docker exec command, you can execute a command in a running container.
 
 `sudo docker exec -i mysql-server mysql -uroot -p$MYSQL_PW < $tooling_db_schema`
 
-[Exec Tooling Schema](./images/exec-schema.PNG)
+[Exec Tooling Schema](./images/exec-schema.png)
 
 Update the .env file with connection details to the database
 The .env file is located in the html tooling/html/.env folder but not visible in terminal. you can use vi or nano
@@ -249,7 +249,7 @@ Ensure you are in the html folder, In the terminal, run the command:
 
 `sudo vi db_conn.php`
 
-[Db Conn.php Update](./images/db-conn-php.PNG)
+[Db Conn.php Update](./images/db-conn-php.png)
 
 Run the Tooling App
 Containerization of an application starts with creation of a file with a special name - 'Dockerfile' (without any extensions). This can be considered as a 'recipe' or 'instruction' that tells Docker how to pack your application into a container. In this project, you will build your container from a pre-created Dockerfile, but as a DevOps, you must also be able to write Dockerfiles.
@@ -271,9 +271,9 @@ Ensure you are inside the directory "tooling" that has the file Dockerfile and b
 
 `sudo docker build -t tooling:0.0.1 .`
 
-[Docker Build](./images/docker-build1.PNG)
+[Docker Build](./images/docker-build1.png)
 
-[Docker Build](./images/docker-build2.PNG)
+[Docker Build](./images/docker-build2.png)
 
 In the above command, we specify a parameter -t, so that the image can be tagged tooling"0.0.1 - Also, you have to notice the . at the end. This is important as that tells Docker to locate the Dockerfile in the current directory you are running the command. Otherwise, you would need to specify the absolute path to the Dockerfile.
 
@@ -281,7 +281,7 @@ Run the container:
 
 `sudo docker run --network tooling_app_network -p 8085:80 -it tooling:0.0.1`
 
-[Docker Build](./images/docker-build1.PNG)
+[Docker Build](./images/docker-build1.png)
 
 Let us observe those flags in the command.
 
@@ -291,7 +291,7 @@ Note: You will get an error. But you must troubleshoot this error and fix it. Be
 
 Use your public IP address and expose port 8085 in your security group to access the site on your browser:
 
-[Expose 8085 Output](./images/8085-output.PNG)
+[Expose 8085 Output](./images/8085-output.png)
 
 AH00558: apache2: Could not reliably determine the server's fully qualified domain name, using 172.18.0.3. Set the 'ServerName' directive globally to suppress this message
 
@@ -301,4 +301,4 @@ Launch the Url below:
 
 `http://18.203.245.99:8085/`
 
-[URL Success](./images/url-output.PNG)
+[URL Success](./images/url-output.png)
